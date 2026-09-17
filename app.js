@@ -206,7 +206,6 @@ updateTotals();
 // Payment-stage interactions
 const paymentScreenshot = $("paymentScreenshot");
 const chooseScreenshot = $("chooseScreenshot");
-const sendScreenshot = $("sendScreenshot");
 const paymentFile = $("paymentFile");
 const paymentFileName = $("paymentFileName");
 const paymentFileMeta = $("paymentFileMeta");
@@ -232,7 +231,6 @@ paymentScreenshot.addEventListener("change", () => {
     paymentScreenshot.value = "";
     selectedPaymentFile = null;
     paymentFile.classList.add("hidden");
-    sendScreenshot.disabled = true;
     uploadStatus.textContent = "Please choose a JPG, PNG or PDF.";
     return;
   }
@@ -241,7 +239,6 @@ paymentScreenshot.addEventListener("change", () => {
     paymentScreenshot.value = "";
     selectedPaymentFile = null;
     paymentFile.classList.add("hidden");
-    sendScreenshot.disabled = true;
     uploadStatus.textContent = "The screenshot must be 5 MB or smaller.";
     return;
   }
@@ -250,9 +247,8 @@ paymentScreenshot.addEventListener("change", () => {
   paymentFileName.textContent = file.name;
   paymentFileMeta.textContent = `${formatFileSize(file.size)} · Ready to send`;
   paymentFile.classList.remove("hidden");
-  sendScreenshot.disabled = false;
   finishButton.disabled = false;
-  uploadStatus.textContent = "Screenshot selected.";
+  uploadStatus.textContent = "Screenshot attached. It will be submitted with your registration.";
 });
 
 removePaymentFile.addEventListener("click", () => {
@@ -262,15 +258,6 @@ removePaymentFile.addEventListener("click", () => {
   sendScreenshot.disabled = true;
   finishButton.disabled = true;
   uploadStatus.textContent = "";
-});
-
-sendScreenshot.addEventListener("click", () => {
-  if (!selectedPaymentFile) return;
-
-  // UI-only prototype behavior for now. The actual Google Drive upload
-  // will be connected in the backend integration step.
-  uploadStatus.textContent = "Screenshot ready to send. Backend connection comes next.";
-  showToast("Screenshot ready");
 });
 
 copyUpi.addEventListener("click", async () => {
