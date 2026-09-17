@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f7fb" />
+  <title>Swimming Challenge</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Swimming Challenge">
+        <div class="brand-mark">⌁</div>
+        <div>
+          <div class="brand-title">Swimming Challenge</div>
+          <div class="brand-subtitle">Participant registration</div>
+        </div>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon" id="themeIcon">☀︎</span>
+        <span id="themeText">Light</span>
+      </button>
+    </header>
+
+    <main class="content">
+      <section class="hero">
+        <div class="eyebrow"><span class="pulse-dot"></span> Open for registration</div>
+        <h1>Make your swim count.</h1>
+        <p>Register in a few taps. We’ll keep the experience simple on your phone.</p>
+      </section>
+
+      <div class="stepper" aria-label="Registration progress">
+        <div class="step active" data-step="1">
+          <span class="step-number">1</span>
+          <span class="step-label">Your details</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2">
+          <span class="step-number">2</span>
+          <span class="step-label">Choose events</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3">
+          <span class="step-number">3</span>
+          <span class="step-label">Payment</span>
+        </div>
+      </div>
+
+      <form id="registrationForm" novalidate>
+        <!-- STAGE 1 -->
+        <section class="stage active" id="stage1" data-stage="1">
+          <div class="card glass-card">
+            <div class="card-heading">
+              <div>
+                <div class="section-kicker">Stage 1</div>
+                <h2>Tell us about you</h2>
+                <p>Just the essentials. You can review everything before submitting.</p>
+              </div>
+              <div class="water-icon">◒</div>
+            </div>
+
+            <div class="form-grid">
+              <label class="field full">
+                <span class="field-label">Name</span>
+                <input id="name" name="name" type="text" autocomplete="name" placeholder="Your full name" maxlength="80" />
+                <span class="field-error" id="nameError"></span>
+              </label>
+
+              <label class="field">
+                <span class="field-label">Date of birth</span>
+                <input id="dob" name="dob" type="date" autocomplete="bday" />
+                <span class="field-error" id="dobError"></span>
+              </label>
+
+              <label class="field">
+                <span class="field-label">Gender</span>
+                <select id="gender" name="gender">
+                  <option value="">Select</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                  <option>Prefer not to say</option>
+                </select>
+                <span class="field-error" id="genderError"></span>
+              </label>
+
+              <div class="field full">
+                <span class="field-label">DOB proof</span>
+                <div class="upload-card" id="uploadCard">
+                  <input id="dobProof" name="dobProof" type="file" accept="image/*,.pdf" hidden />
+                  <button class="upload-button" type="button" id="uploadButton">
+                    <span class="upload-icon">↑</span>
+                    <span>
+                      <strong>Upload proof</strong>
+                      <small>JPG, PNG or PDF · up to 5 MB</small>
+                    </span>
+                  </button>
+                  <div class="file-chip hidden" id="fileChip">
+                    <span class="file-chip-icon">✓</span>
+                    <span class="file-chip-name" id="fileName"></span>
+                    <button class="remove-file" id="removeFile" type="button" aria-label="Remove uploaded proof">×</button>
+                  </div>
+                </div>
+                <span class="field-hint">Use a clear copy of the participant’s date-of-birth proof.</span>
+                <span class="field-error" id="dobProofError"></span>
+              </div>
+
+              <label class="field full">
+                <span class="field-label">WhatsApp number</span>
+                <div class="phone-field">
+                  <span class="country-code">+91</span>
+                  <input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile number" maxlength="10" />
+                </div>
+                <span class="field-hint">We’ll use this number for registration updates.</span>
+                <span class="field-error" id="whatsappError"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="sticky-actions">
+            <button class="primary-button" type="button" id="toEvents">
+              Continue
+              <span>→</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- STAGE 2 -->
+        <section class="stage" id="stage2" data-stage="2">
+          <div class="card glass-card">
+            <div class="card-heading">
+              <div>
+                <div class="section-kicker">Stage 2</div>
+                <h2>Choose your events</h2>
+                <p>Every selected event costs ₹200.</p>
+              </div>
+              <div class="water-icon">≈</div>
+            </div>
+
+            <div class="event-list">
+              <label class="event-row">
+                <input class="event-checkbox" type="checkbox" name="events" value="50m Freestyle" />
+                <span class="custom-checkbox"></span>
+                <span class="event-copy">
+                  <strong>50m Freestyle</strong>
+                  <small>Freestyle</small>
+                </span>
+                <span class="event-fee">₹200</span>
+              </label>
+
+              <label class="event-row">
+                <input class="event-checkbox" type="checkbox" name="events" value="50m Backstroke" />
+                <span class="custom-checkbox"></span>
+                <span class="event-copy">
+                  <strong>50m Backstroke</strong>
+                  <small>Backstroke</small>
+                </span>
+                <span class="event-fee">₹200</span>
+              </label>
+
+              <label class="event-row">
+                <input class="event-checkbox" type="checkbox" name="events" value="50m Breaststroke" />
+                <span class="custom-checkbox"></span>
+                <span class="event-copy">
+                  <strong>50m Breaststroke</strong>
+                  <small>Breaststroke</small>
+                </span>
+                <span class="event-fee">₹200</span>
+              </label>
+
+              <label class="event-row">
+                <input class="event-checkbox" type="checkbox" name="events" value="50m Butterfly" />
+                <span class="custom-checkbox"></span>
+                <span class="event-copy">
+                  <strong>50m Butterfly</strong>
+                  <small>Butterfly</small>
+                </span>
+                <span class="event-fee">₹200</span>
+              </label>
+            </div>
+
+            <div class="total-card">
+              <div>
+                <span class="total-label">Selected events</span>
+                <strong id="eventCount">0</strong>
+              </div>
+              <div class="total-divider"></div>
+              <div class="total-amount-block">
+                <span class="total-label">Registration fee</span>
+                <strong id="totalAmount">₹0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky-actions split-actions">
+            <button class="secondary-button" type="button" id="backToDetails">Back</button>
+            <button class="primary-button" type="button" id="toPayment">
+              Continue
+              <span>→</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- STAGE 3 -->
+        <section class="stage" id="stage3" data-stage="3">
+          <div class="card glass-card payment-card">
+            <div class="card-heading">
+              <div>
+                <div class="section-kicker">Stage 3</div>
+                <h2>Complete your payment</h2>
+                <p>Scan the QR code or use the UPI ID below. Then send your payment screenshot.</p>
+              </div>
+              <div class="water-icon">₹</div>
+            </div>
+
+            <div class="payment-summary">
+              <div>
+                <span>Participant</span>
+                <strong id="summaryName">—</strong>
+              </div>
+              <div>
+                <span>Events</span>
+                <strong id="summaryEvents">—</strong>
+              </div>
+              <div class="payment-summary-total">
+                <span>Total to pay</span>
+                <strong id="summaryAmount">₹0</strong>
+              </div>
+            </div>
+
+            <div class="qr-panel">
+              <div class="qr-wrap">
+                <img src="assets/payment-qr.png" alt="Swimming challenge payment QR code" class="qr-image" />
+              </div>
+              <div class="qr-copy">
+                <span class="field-label">Scan &amp; pay</span>
+                <p>Open your UPI app and scan the QR code. Please pay the exact amount shown above.</p>
+                <div class="upi-row">
+                  <div>
+                    <span class="upi-label">Alternative UPI ID</span>
+                    <strong id="upiId">tusharson@oksbi</strong>
+                  </div>
+                  <button class="copy-button" type="button" id="copyUpi">Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="payment-divider"></div>
+
+            <div class="payment-upload">
+              <div>
+                <div class="field-label">Payment screenshot</div>
+                <div class="field-hint">After payment, upload the screenshot from your phone. JPG, PNG or PDF · up to 5 MB</div>
+              </div>
+
+              <input id="paymentScreenshot" name="paymentScreenshot" type="file" accept="image/*,.pdf" hidden />
+
+              <div class="screenshot-actions">
+                <button class="secondary-button upload-screenshot-button" type="button" id="chooseScreenshot">
+                  <span>＋</span> Choose screenshot
+                </button>
+                <button class="primary-button upload-screenshot-button" type="button" id="sendScreenshot" disabled>
+                  Send screenshot
+                  <span>→</span>
+                </button>
+              </div>
+
+              <div class="payment-file hidden" id="paymentFile">
+                <div class="payment-file-icon">✓</div>
+                <div class="payment-file-copy">
+                  <strong id="paymentFileName">Screenshot selected</strong>
+                  <small id="paymentFileMeta"></small>
+                </div>
+                <button class="remove-file" id="removePaymentFile" type="button" aria-label="Remove payment screenshot">×</button>
+              </div>
+
+              <div class="upload-status" id="uploadStatus"></div>
+            </div>
+
+            <label class="field payment-reference-field">
+              <span class="field-label">UPI transaction ID <span class="optional">(optional)</span></span>
+              <input id="paymentReference" name="paymentReference" type="text" inputmode="text" autocomplete="off" placeholder="Enter the UPI reference number" maxlength="80" />
+            </label>
+          </div>
+
+          <div class="sticky-actions split-actions">
+            <button class="secondary-button" type="button" id="backToEvents">Back</button>
+            <button class="primary-button" type="button" id="finishButton" disabled>
+              Submit registration
+            </button>
+          </div>
+        </section>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <span>Swimming Challenge</span>
+      <span>•</span>
+      <span>Built for mobile</span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
