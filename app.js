@@ -632,23 +632,6 @@ function calculateTotal() {
   );
 }
 
-function updateUpiLink() {
-  const total = calculateTotal();
-
-  const upiParams = new URLSearchParams({
-    pa: "tusharson@oksbi",
-    pn: "Nashik Swims",
-    am: String(total),
-    cu: "INR",
-    tn: ACTIVE_COMPETITION.name
-  });
-
-  upiPayLink.href =
-    `upi://pay?${upiParams.toString()}`;
-
-  upiPayAmount.textContent =
-    `₹${total}`;
-}
 
 function updateTotals() {
 
@@ -663,7 +646,6 @@ function updateTotals() {
     .textContent =
       `₹${calculateTotal()}`;
 
-  updateUpiLink();
 }
 
 $("competitionDescription")
@@ -751,11 +733,6 @@ const finishButton =
 const copyUpi =
   $("copyUpi");
 
-const upiPayLink =
-  $("upiPayLink");
-
-const upiPayAmount =
-  $("upiPayAmount");
 
 let selectedPaymentFile =
   null;

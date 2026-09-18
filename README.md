@@ -175,3 +175,18 @@ The payment screen now has a `Pay using UPI` button. It creates a standard
 On a phone, the operating system/browser may present the available UPI app(s)
 that can handle the link. Desktop browsers will normally not have a UPI app
 handler.
+
+
+## v12
+
+The UPI deep-link button has been removed for now.
+
+The payment flow now remains:
+- QR code
+- Alternative UPI ID `tusharson@oksbi`
+- Copy UPI ID
+- Payment screenshot attachment
+- Optional UPI transaction ID
+- Submit registration
+
+No automatic UPI-app redirect is used.
