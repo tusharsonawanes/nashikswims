@@ -7,7 +7,6 @@ const $ = (id) => document.getElementById(id);
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzk2k9SDkVzxMKXSM6_OrwF_jWiCHO7Ka5JO_az-qibQ7tTNYUCYCLHG5lhm3Y3wZOV/exec";
 
-const FEE_PER_EVENT = 200;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const VALID_FILE_TYPES = [
@@ -15,6 +14,55 @@ const VALID_FILE_TYPES = [
   "image/png",
   "application/pdf"
 ];
+
+const COMPETITIONS = {
+  "swimming-challenge-2026": {
+    name: "Swimming Challenge 2026",
+    feePerEvent: 200,
+    events: [
+      {
+        id: "50m-freestyle",
+        name: "50m Freestyle",
+        stroke: "Freestyle",
+        order: 1
+      },
+      {
+        id: "50m-backstroke",
+        name: "50m Backstroke",
+        stroke: "Backstroke",
+        order: 2
+      },
+      {
+        id: "50m-breaststroke",
+        name: "50m Breaststroke",
+        stroke: "Breaststroke",
+        order: 3
+      },
+      {
+        id: "50m-butterfly",
+        name: "50m Butterfly",
+        stroke: "Butterfly",
+        order: 4
+      }
+    ]
+  }
+
+  // Future competition example:
+  //
+  // "winter-swim-2027": {
+  //   name: "Winter Swim 2027",
+  //   feePerEvent: 250,
+  //   events: [...]
+  // }
+};
+
+const ACTIVE_COMPETITION_ID =
+  "swimming-challenge-2026";
+
+const ACTIVE_COMPETITION =
+  COMPETITIONS[
+    ACTIVE_COMPETITION_ID
+  ];
 
 // ============================================================
 // Theme
@@ -25,64 +73,103 @@ const themeIcon = $("themeIcon");
 const themeText = $("themeText");
 const root = document.documentElement;
 
-const savedTheme = localStorage.getItem("swim-theme");
+const savedTheme =
+  localStorage.getItem(
+    "swim-theme"
+  );
+
 const preferredDark =
   window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches;
+  window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
 
-setTheme(savedTheme || (preferredDark ? "dark" : "light"));
+setTheme(
+  savedTheme ||
+  (preferredDark
+    ? "dark"
+    : "light")
+);
 
 function setTheme(theme) {
-  root.dataset.theme = theme;
 
-  const dark = theme === "dark";
+  root.dataset.theme =
+    theme;
 
-  themeIcon.textContent = dark ? "☾" : "☀︎";
-  themeText.textContent = dark ? "Dark" : "Light";
+  const dark =
+    theme === "dark";
+
+  themeIcon.textContent =
+    dark ? "☾" : "☀︎";
+
+  themeText.textContent =
+    dark ? "Dark" : "Light";
 
   document
-    .querySelector('meta[name="theme-color"]')
+    .querySelector(
+      'meta[name="theme-color"]'
+    )
     .setAttribute(
       "content",
-      dark ? "#07111f" : "#f4f7fb"
+      dark
+        ? "#07111f"
+        : "#f4f7fb"
     );
 }
 
-themeToggle.addEventListener("click", () => {
-  const next =
-    root.dataset.theme === "dark"
-      ? "light"
-      : "dark";
+themeToggle.addEventListener(
+  "click",
+  () => {
 
-  setTheme(next);
-  localStorage.setItem("swim-theme", next);
-});
+    const next =
+      root.dataset.theme ===
+      "dark"
+        ? "light"
+        : "dark";
+
+    setTheme(next);
+
+    localStorage.setItem(
+      "swim-theme",
+      next
+    );
+  }
+);
 
 // ============================================================
 // Stage navigation
 // ============================================================
 
-const stages = [1, 2, 3].map(
-  n => $("stage" + n)
-);
+const stages =
+  [1, 2, 3].map(
+    n =>
+      $("stage" + n)
+  );
 
 const steps = [
-  ...document.querySelectorAll(".step")
+  ...document.querySelectorAll(
+    ".step"
+  )
 ];
 
 function goToStage(number) {
 
   stages.forEach(stage => {
+
     stage.classList.toggle(
       "active",
-      Number(stage.dataset.stage) === number
+      Number(
+        stage.dataset.stage
+      ) === number
     );
   });
 
   steps.forEach(step => {
 
     const n =
-      Number(step.dataset.step);
+      Number(
+        step.dataset.step
+      );
 
     step.classList.toggle(
       "active",
@@ -108,10 +195,13 @@ function goToStage(number) {
 function clearErrors() {
 
   document
-    .querySelectorAll(".field-error")
-    .forEach(el => {
-      el.textContent = "";
-    });
+    .querySelectorAll(
+      ".field-error"
+    )
+    .forEach(
+      el =>
+        el.textContent = ""
+    );
 }
 
 function setError(
@@ -129,7 +219,9 @@ function validateStage1() {
   let valid = true;
 
   const name =
-    $("name").value.trim();
+    $("name")
+      .value
+      .trim();
 
   const dob =
     $("dob").value;
@@ -140,10 +232,14 @@ function validateStage1() {
   const whatsapp =
     $("whatsapp")
       .value
-      .replace(/\D/g, "");
+      .replace(
+        /\D/g,
+        ""
+      );
 
   const file =
-    $("dobProof").files[0];
+    $("dobProof")
+      .files[0];
 
   if (name.length < 2) {
 
@@ -174,7 +270,10 @@ function validateStage1() {
     const today =
       new Date();
 
-    if (selectedDate > today) {
+    if (
+      selectedDate >
+      today
+    ) {
 
       setError(
         "dobError",
@@ -224,7 +323,7 @@ function validateStage1() {
 }
 
 // ============================================================
-// DOB proof upload
+// DOB proof
 // ============================================================
 
 const dobProof =
@@ -312,7 +411,8 @@ function handleDobProof() {
     )
   ) {
 
-    dobProof.value = "";
+    dobProof.value =
+      "";
 
     fileChip.classList.add(
       "hidden"
@@ -331,7 +431,8 @@ function handleDobProof() {
     MAX_FILE_SIZE
   ) {
 
-    dobProof.value = "";
+    dobProof.value =
+      "";
 
     fileChip.classList.add(
       "hidden"
@@ -357,16 +458,19 @@ removeFile.addEventListener(
   "click",
   () => {
 
-    dobProof.value = "";
+    dobProof.value =
+      "";
 
     fileChip.classList.add(
       "hidden"
     );
 
-    fileName.textContent = "";
+    fileName.textContent =
+      "";
 
     $("dobProofError")
-      .textContent = "";
+      .textContent =
+      "";
   }
 );
 
@@ -377,7 +481,10 @@ $("whatsapp").addEventListener(
     e.target.value =
       e.target.value
         .replace(/\D/g, "")
-        .slice(0, 10);
+        .slice(
+          0,
+          10
+        );
   }
 );
 
@@ -401,53 +508,134 @@ $("toEvents").addEventListener(
 
     if (firstError) {
 
-      firstError.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+      firstError.scrollIntoView(
+        {
+          behavior: "smooth",
+          block: "center"
+        }
+      );
     }
   }
 );
 
 $("backToDetails").addEventListener(
   "click",
-  () => goToStage(1)
+  () =>
+    goToStage(1)
 );
 
 // ============================================================
-// Event selection + fee
+// Events + fee
 // ============================================================
 
-const eventCheckboxes = [
-  ...document.querySelectorAll(
-    ".event-checkbox"
-  )
-];
+const eventList =
+  $("eventList");
 
-function getSelectedEvents() {
+function renderEvents() {
 
-  return eventCheckboxes
-    .filter(
-      cb => cb.checked
-    )
-    .map(
-      cb => cb.value
+  eventList.innerHTML =
+    "";
+
+  ACTIVE_COMPETITION
+    .events
+    .forEach(
+      event => {
+
+        const label =
+          document.createElement(
+            "label"
+          );
+
+        label.className =
+          "event-row";
+
+        label.innerHTML = `
+          <input
+            class="event-checkbox"
+            type="checkbox"
+            name="events"
+            value="${escapeHtml(event.id)}"
+          />
+          <span class="custom-checkbox"></span>
+          <span class="event-copy">
+            <strong>${escapeHtml(event.name)}</strong>
+            <small>${escapeHtml(event.stroke)}</small>
+          </span>
+          <span class="event-fee">₹${ACTIVE_COMPETITION.feePerEvent}</span>
+        `;
+
+        eventList.appendChild(
+          label
+        );
+      }
     );
+
+  document
+    .querySelectorAll(
+      ".event-checkbox"
+    )
+    .forEach(
+      checkbox =>
+        checkbox.addEventListener(
+          "change",
+          updateTotals
+        )
+    );
+}
+
+function escapeHtml(value) {
+
+  return String(
+    value
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+}
+
+function getSelectedEventIds() {
+
+  return [
+    ...document.querySelectorAll(
+      ".event-checkbox:checked"
+    )
+  ].map(
+    checkbox =>
+      checkbox.value
+  );
 }
 
 function calculateTotal() {
 
   return (
-    getSelectedEvents()
+    getSelectedEventIds()
       .length *
-    FEE_PER_EVENT
+    ACTIVE_COMPETITION
+      .feePerEvent
   );
 }
 
 function updateTotals() {
 
   const selected =
-    getSelectedEvents();
+    getSelectedEventIds();
 
   $("eventCount")
     .textContent =
@@ -458,22 +646,20 @@ function updateTotals() {
       `₹${calculateTotal()}`;
 }
 
-eventCheckboxes.forEach(
-  cb =>
-    cb.addEventListener(
-      "change",
-      updateTotals
-    )
-);
+$("competitionDescription")
+  .textContent =
+    `Every selected event costs ₹${ACTIVE_COMPETITION.feePerEvent}.`;
 
 $("toPayment").addEventListener(
   "click",
   () => {
 
     const selected =
-      getSelectedEvents();
+      getSelectedEventIds();
 
-    if (!selected.length) {
+    if (
+      !selected.length
+    ) {
 
       showToast(
         "Select at least one event."
@@ -507,8 +693,12 @@ $("toPayment").addEventListener(
 
 $("backToEvents").addEventListener(
   "click",
-  () => goToStage(2)
+  () =>
+    goToStage(2)
 );
+
+renderEvents();
+updateTotals();
 
 // ============================================================
 // Payment screenshot
@@ -555,11 +745,13 @@ paymentScreenshot.addEventListener(
   () => {
 
     const file =
-      paymentScreenshot.files[0];
+      paymentScreenshot
+        .files[0];
 
     if (!file) return;
 
-    uploadStatus.textContent = "";
+    uploadStatus.textContent =
+      "";
 
     if (
       !VALID_FILE_TYPES.includes(
@@ -665,7 +857,9 @@ copyUpi.addEventListener(
     try {
 
       await navigator.clipboard
-        .writeText(upiId);
+        .writeText(
+          upiId
+        );
 
       copyUpi.textContent =
         "Copied";
@@ -690,148 +884,259 @@ copyUpi.addEventListener(
 // Files
 // ============================================================
 
-function fileToDataUrl(file) {
+function fileToDataUrl(
+  file
+) {
 
   return new Promise(
-    (resolve, reject) => {
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
 
-      reader.onload = () =>
-        resolve(
-          reader.result
-        );
+      reader.onload =
+        () =>
+          resolve(
+            reader.result
+          );
 
-      reader.onerror = () =>
-        reject(
-          new Error(
-            `Could not read ${file.name}.`
-          )
-        );
+      reader.onerror =
+        () =>
+          reject(
+            new Error(
+              `Could not read ${file.name}.`
+            )
+          );
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(
+        file
+      );
     }
   );
 }
 
 // ============================================================
-// Submission
+// Submit
 //
-// The Apps Script endpoint is intentionally public/anonymous.
-// We submit with a browser CORS-safe POST and do not attempt to
-// read the cross-origin response. This avoids the Firefox redirect /
-// JSONP MIME problem encountered earlier.
+// Registration number is now generated by Apps Script.
+// The browser submits with no-cors and then polls a tiny,
+// read-only JSONP status endpoint using an unguessable token.
+//
+// This works because the Apps Script deployment has been
+// confirmed accessible anonymously in a private window.
 // ============================================================
 
-function generateRegistrationId() {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  const bytes = new Uint8Array(8);
-  crypto.getRandomValues(bytes);
-
-  let suffix = "";
-
-  for (const byte of bytes) {
-    suffix += alphabet[byte % alphabet.length];
-  }
-
-  return `SWIM-${suffix}`;
-}
-
 function generateSubmissionToken() {
-  const bytes = new Uint8Array(24);
-  crypto.getRandomValues(bytes);
 
-  return Array.from(bytes)
-    .map(byte => byte.toString(16).padStart(2, "0"))
+  const bytes =
+    new Uint8Array(
+      24
+    );
+
+  crypto.getRandomValues(
+    bytes
+  );
+
+  return Array
+    .from(bytes)
+    .map(
+      byte =>
+        byte
+          .toString(16)
+          .padStart(
+            2,
+            "0"
+          )
+    )
     .join("");
 }
 
 async function submitRegistration() {
-  if (!validateStage1()) {
+
+  if (
+    !validateStage1()
+  ) {
+
     goToStage(1);
+
     return;
   }
 
-  const events = getSelectedEvents();
+  const eventIds =
+    getSelectedEventIds();
 
-  if (!events.length) {
+  if (!eventIds.length) {
+
     goToStage(2);
-    showToast("Select at least one event.");
+
+    showToast(
+      "Select at least one event."
+    );
+
     return;
   }
 
-  if (!selectedPaymentFile) {
-    showToast("Please attach your payment screenshot.");
+  if (
+    !selectedPaymentFile
+  ) {
+
+    showToast(
+      "Please attach your payment screenshot."
+    );
+
     return;
   }
 
-  const dobProofFile = dobProof.files[0];
-  const paymentFile = selectedPaymentFile;
-  const registrationId = generateRegistrationId();
-  const submissionToken = generateSubmissionToken();
+  const dobProofFile =
+    dobProof.files[0];
+
+  const paymentFile =
+    selectedPaymentFile;
+
+  const submissionToken =
+    generateSubmissionToken();
 
   setSubmitting(true);
 
   try {
+
     uploadStatus.textContent =
       "Preparing your documents…";
 
-    const [dobProofData, paymentScreenshotData] =
-      await Promise.all([
-        fileToDataUrl(dobProofFile),
-        fileToDataUrl(paymentFile)
-      ]);
+    const [
+      dobProofData,
+      paymentScreenshotData
+    ] = await Promise.all([
+      fileToDataUrl(
+        dobProofFile
+      ),
+      fileToDataUrl(
+        paymentFile
+      )
+    ]);
 
     uploadStatus.textContent =
       "Submitting registration…";
 
-    const body = new URLSearchParams();
+    const body =
+      new URLSearchParams();
 
-    body.set("registrationId", registrationId);
-    body.set("submissionToken", submissionToken);
-    body.set("name", $("name").value.trim());
-    body.set("dob", $("dob").value);
-    body.set("gender", $("gender").value);
+    body.set(
+      "name",
+      $("name")
+        .value
+        .trim()
+    );
+
+    body.set(
+      "dob",
+      $("dob").value
+    );
+
+    body.set(
+      "gender",
+      $("gender").value
+    );
+
     body.set(
       "whatsapp",
-      $("whatsapp").value.replace(/\D/g, "")
+      $("whatsapp")
+        .value
+        .replace(
+          /\D/g,
+          ""
+        )
     );
-    body.set("events", JSON.stringify(events));
+
+    body.set(
+      "competitionId",
+      ACTIVE_COMPETITION_ID
+    );
+
+    body.set(
+      "events",
+      JSON.stringify(
+        eventIds
+      )
+    );
+
     body.set(
       "paymentReference",
-      $("paymentReference").value.trim()
+      $("paymentReference")
+        .value
+        .trim()
     );
-    body.set("dobProofBase64", dobProofData);
-    body.set("dobProofMimeType", dobProofFile.type);
+
+    body.set(
+      "dobProofBase64",
+      dobProofData
+    );
+
+    body.set(
+      "dobProofMimeType",
+      dobProofFile.type
+    );
+
     body.set(
       "paymentScreenshotBase64",
       paymentScreenshotData
     );
+
     body.set(
       "paymentScreenshotMimeType",
       paymentFile.type
     );
-    body.set("clientSource", "gitlab-pages");
 
-    // no-cors is intentional. The request is sent to Apps Script,
-    // but the browser is not asked to read its cross-origin response.
-    await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body
-    });
+    body.set(
+      "clientSource",
+      "gitlab-pages"
+    );
 
-    // The backend uses the same client-generated registration ID,
-    // so the participant can be shown the exact reference without
-    // requiring a cross-origin response body.
+    body.set(
+      "submissionToken",
+      submissionToken
+    );
+
+    // Deliberately opaque. We don't attempt to read the POST response.
+    await fetch(
+      APPS_SCRIPT_URL,
+      {
+        method: "POST",
+        mode: "no-cors",
+        body
+      }
+    );
+
+    uploadStatus.textContent =
+      "Registration sent. Confirming your registration number…";
+
+    const result =
+      await pollSubmissionStatus(
+        submissionToken
+      );
+
+    if (
+      result.status !==
+      "success"
+    ) {
+
+      throw new Error(
+        result.message ||
+        "Registration could not be completed."
+      );
+    }
+
     showSuccess(
-      registrationId,
-      events,
-      calculateTotal()
+      result.registrationNo,
+      eventIds,
+      result.totalFee
     );
 
   } catch (error) {
+
     console.error(
       "Swimming registration:",
       error
@@ -839,11 +1144,171 @@ async function submitRegistration() {
 
     showSubmissionError(
       error.message ||
-      "Could not send the registration. Please try again."
+      "Something went wrong. Please try again."
     );
+
   } finally {
-    setSubmitting(false);
+
+    setSubmitting(
+      false
+    );
   }
+}
+
+// ============================================================
+// JSONP status polling
+// ============================================================
+
+function pollSubmissionStatus(
+  token
+) {
+
+  return new Promise(
+    (
+      resolve,
+      reject
+    ) => {
+
+      const callbackName =
+        `__swimStatus_${Date.now()}_${Math.floor(
+          Math.random() *
+          100000
+        )}`;
+
+      let attempts =
+        0;
+
+      const maxAttempts =
+        90;
+
+      let pollTimer =
+        null;
+
+      let script =
+        null;
+
+      function cleanup() {
+
+        if (
+          pollTimer
+        ) {
+
+          clearInterval(
+            pollTimer
+          );
+
+          pollTimer =
+            null;
+        }
+
+        try {
+          delete window[
+            callbackName
+          ];
+        } catch {}
+
+        if (
+          script &&
+          script.parentNode
+        ) {
+
+          script.parentNode
+            .removeChild(
+              script
+            );
+        }
+      }
+
+      function requestStatus() {
+
+        script =
+          document.createElement(
+            "script"
+          );
+
+        script.async =
+          true;
+
+        script.src =
+          APPS_SCRIPT_URL +
+          "?callback=" +
+          encodeURIComponent(
+            callbackName
+          ) +
+          "&token=" +
+          encodeURIComponent(
+            token
+          ) +
+          "&_=" +
+          Date.now();
+
+        script.onerror =
+          () => {
+            // The next poll retries.
+          };
+
+        document.body.appendChild(
+          script
+        );
+      }
+
+      window[
+        callbackName
+      ] =
+        result => {
+
+          if (
+            !result ||
+            !result.status
+          ) {
+            return;
+          }
+
+          if (
+            result.status ===
+            "pending"
+          ) {
+            return;
+          }
+
+          cleanup();
+
+          resolve(
+            result
+          );
+        };
+
+      pollTimer =
+        setInterval(
+          () => {
+
+            attempts += 1;
+
+            if (
+              attempts >
+              maxAttempts
+            ) {
+
+              cleanup();
+
+              reject(
+                new Error(
+                  "The registration server did not confirm the submission within 90 seconds. Please check the Nashik Swims sheet before trying again."
+                )
+              );
+
+              return;
+            }
+
+            requestStatus();
+
+          },
+          1000
+        );
+
+      requestStatus();
+    }
+  );
 }
 
 // ============================================================
@@ -863,7 +1328,9 @@ function setSubmitting(
     submitting
   );
 
-  if (submitting) {
+  if (
+    submitting
+  ) {
 
     finishButton.innerHTML =
       `<span class="button-spinner"></span> Submitting…`;
@@ -880,7 +1347,8 @@ function setSubmitting(
   removePaymentFile.disabled =
     submitting;
 
-  $("backToEvents").disabled =
+  $("backToEvents")
+    .disabled =
     submitting;
 }
 
@@ -897,14 +1365,14 @@ function showSubmissionError(
 }
 
 function showSuccess(
-  registrationId,
-  events,
+  registrationNo,
+  eventIds,
   total
 ) {
 
   $("successRegistrationId")
     .textContent =
-      registrationId;
+      registrationNo;
 
   $("successName")
     .textContent =
@@ -914,8 +1382,8 @@ function showSuccess(
 
   $("successEvents")
     .textContent =
-      `${events.length} event${
-        events.length === 1
+      `${eventIds.length} event${
+        eventIds.length === 1
           ? ""
           : "s"
       }`;
@@ -980,7 +1448,11 @@ function formatFileSize(
   bytes
 ) {
 
-  if (bytes < 1024) {
+  if (
+    bytes <
+    1024
+  ) {
+
     return `${bytes} B`;
   }
 
@@ -988,6 +1460,7 @@ function formatFileSize(
     bytes <
     1024 * 1024
   ) {
+
     return `${Math.round(
       bytes / 1024
     )} KB`;
@@ -996,12 +1469,12 @@ function formatFileSize(
   return `${(
     bytes /
     (1024 * 1024)
-  ).toFixed(1)} MB`;
+  ).toFixed(
+    1
+  )} MB`;
 }
 
 finishButton.addEventListener(
   "click",
   submitRegistration
 );
-
-updateTotals();
