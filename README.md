@@ -123,3 +123,18 @@ Because the existing web-app URL is already confirmed anonymously accessible,
 the frontend can use a tiny read-only JSONP status call after its opaque POST.
 Only the registration number, status and total fee are returned.
 No participant details or Drive URLs are exposed through the status endpoint.
+
+
+## v10 event-selection fix
+
+The backend now accepts both:
+- `eventIds` (stable event IDs)
+- `events` (human-readable event names)
+
+The frontend sends both. This prevents a temporary frontend/backend version
+mismatch or browser cache from turning a valid event selection into
+"At least one event must be selected."
+
+A visible Apps Script helper `testSwimmingConfiguration()` was also added.
+It creates/verifies the registration sheet, event-entry sheet and competition
+Drive folder without submitting a participant.

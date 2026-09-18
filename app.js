@@ -1056,8 +1056,30 @@ async function submitRegistration() {
       ACTIVE_COMPETITION_ID
     );
 
+    const selectedEventObjects =
+      eventIds
+        .map(
+          id =>
+            ACTIVE_COMPETITION.events.find(
+              event => event.id === id
+            )
+        )
+        .filter(Boolean);
+
+    // Send both forms:
+    // - events: human-readable event names (backward-compatible)
+    // - eventIds: stable event IDs for the normalized data model
     body.set(
       "events",
+      JSON.stringify(
+        selectedEventObjects.map(
+          event => event.name
+        )
+      )
+    );
+
+    body.set(
+      "eventIds",
       JSON.stringify(
         eventIds
       )
