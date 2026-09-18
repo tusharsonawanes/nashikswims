@@ -138,3 +138,40 @@ mismatch or browser cache from turning a valid event selection into
 A visible Apps Script helper `testSwimmingConfiguration()` was also added.
 It creates/verifies the registration sheet, event-entry sheet and competition
 Drive folder without submitting a participant.
+
+
+## v11 changes
+
+### Registration number
+
+New registrations receive a simple numeric Registration No:
+001, 002, 003, ...
+
+The backend remains compatible with legacy `SWIM-0003` rows when calculating
+the next number, so an older test row will not cause number reuse.
+
+The participant UI also accepts both `registrationNo` and the legacy
+`registrationId` status key, preventing a blank success-screen number while
+the deployment is being updated.
+
+### Event-level records
+
+`Event Entries` contains one row per selected event. The backend creates these
+rows on every new registration.
+
+Use the one-time Apps Script function `backfillEventEntries()` after updating
+Code.gs to populate event rows for registrations made with the earlier version.
+
+### UPI deep link
+
+The payment screen now has a `Pay using UPI` button. It creates a standard
+`upi://pay` URI using:
+- VPA: `tusharson@oksbi`
+- Payee name: `Nashik Swims`
+- Exact calculated amount
+- Currency: INR
+- Competition name as the transaction note
+
+On a phone, the operating system/browser may present the available UPI app(s)
+that can handle the link. Desktop browsers will normally not have a UPI app
+handler.

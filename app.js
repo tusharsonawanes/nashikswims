@@ -632,6 +632,24 @@ function calculateTotal() {
   );
 }
 
+function updateUpiLink() {
+  const total = calculateTotal();
+
+  const upiParams = new URLSearchParams({
+    pa: "tusharson@oksbi",
+    pn: "Nashik Swims",
+    am: String(total),
+    cu: "INR",
+    tn: ACTIVE_COMPETITION.name
+  });
+
+  upiPayLink.href =
+    `upi://pay?${upiParams.toString()}`;
+
+  upiPayAmount.textContent =
+    `₹${total}`;
+}
+
 function updateTotals() {
 
   const selected =
@@ -644,6 +662,8 @@ function updateTotals() {
   $("totalAmount")
     .textContent =
       `₹${calculateTotal()}`;
+
+  updateUpiLink();
 }
 
 $("competitionDescription")
@@ -730,6 +750,12 @@ const finishButton =
 
 const copyUpi =
   $("copyUpi");
+
+const upiPayLink =
+  $("upiPayLink");
+
+const upiPayAmount =
+  $("upiPayAmount");
 
 let selectedPaymentFile =
   null;
@@ -1151,10 +1177,16 @@ async function submitRegistration() {
       );
     }
 
+    const displayedRegistrationNo =
+      result.registrationNo ||
+      result.registrationId ||
+      "—";
+
     showSuccess(
-      result.registrationNo,
+      displayedRegistrationNo,
       eventIds,
-      result.totalFee
+      result.totalFee ??
+        calculateTotal()
     );
 
   } catch (error) {
