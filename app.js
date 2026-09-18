@@ -5,7 +5,7 @@ const $ = (id) => document.getElementById(id);
 // ============================================================
 
 const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbx_HaD_abVL6RQTHOb0qmTfOSluHUv6OCov_mcs1rtwmJ2ClMR_ZKyHKgqqZHT-o1mC/exec";
+  "https://script.google.com/macros/s/AKfycbzk2k9SDkVzxMKXSM6_OrwF_jWiCHO7Ka5JO_az-qibQ7tTNYUCYCLHG5lhm3Y3wZOV/exec";
 
 const FEE_PER_EVENT = 200;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;

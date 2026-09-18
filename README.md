@@ -1,4 +1,4 @@
-# Swimming Challenge — Connected v5
+# Swimming Challenge — Connected v6
 
 Mobile-first swimming challenge registration for GitLab Pages, connected to Google Apps Script, Google Sheets, and Google Drive.
 
