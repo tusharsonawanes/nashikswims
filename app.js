@@ -62,10 +62,16 @@ themeToggle.addEventListener("click", () => {
 // Stage navigation
 // ============================================================
 
-const stages = [1, 2, 3].map(n => $("stage" + n));
-const steps = [...document.querySelectorAll(".step")];
+const stages = [1, 2, 3].map(
+  n => $("stage" + n)
+);
+
+const steps = [
+  ...document.querySelectorAll(".step")
+];
 
 function goToStage(number) {
+
   stages.forEach(stage => {
     stage.classList.toggle(
       "active",
@@ -74,13 +80,25 @@ function goToStage(number) {
   });
 
   steps.forEach(step => {
-    const n = Number(step.dataset.step);
 
-    step.classList.toggle("active", n === number);
-    step.classList.toggle("complete", n < number);
+    const n =
+      Number(step.dataset.step);
+
+    step.classList.toggle(
+      "active",
+      n === number
+    );
+
+    step.classList.toggle(
+      "complete",
+      n < number
+    );
   });
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 // ============================================================
@@ -88,61 +106,117 @@ function goToStage(number) {
 // ============================================================
 
 function clearErrors() {
-  document.querySelectorAll(".field-error").forEach(el => {
-    el.textContent = "";
-  });
+
+  document
+    .querySelectorAll(".field-error")
+    .forEach(el => {
+      el.textContent = "";
+    });
 }
 
-function setError(id, message) {
-  $(id).textContent = message;
+function setError(
+  id,
+  message
+) {
+  $(id).textContent =
+    message;
 }
 
 function validateStage1() {
+
   clearErrors();
 
   let valid = true;
 
-  const name = $("name").value.trim();
-  const dob = $("dob").value;
-  const gender = $("gender").value;
-  const whatsapp = $("whatsapp").value.replace(/\D/g, "");
-  const file = $("dobProof").files[0];
+  const name =
+    $("name").value.trim();
+
+  const dob =
+    $("dob").value;
+
+  const gender =
+    $("gender").value;
+
+  const whatsapp =
+    $("whatsapp")
+      .value
+      .replace(/\D/g, "");
+
+  const file =
+    $("dobProof").files[0];
 
   if (name.length < 2) {
-    setError("nameError", "Please enter the participant name.");
+
+    setError(
+      "nameError",
+      "Please enter the participant name."
+    );
+
     valid = false;
   }
 
   if (!dob) {
-    setError("dobError", "Please select the date of birth.");
+
+    setError(
+      "dobError",
+      "Please select the date of birth."
+    );
+
     valid = false;
+
   } else {
-    const selectedDate = new Date(`${dob}T00:00:00`);
-    const today = new Date();
+
+    const selectedDate =
+      new Date(
+        `${dob}T00:00:00`
+      );
+
+    const today =
+      new Date();
+
     if (selectedDate > today) {
-      setError("dobError", "Date of birth cannot be in the future.");
+
+      setError(
+        "dobError",
+        "Date of birth cannot be in the future."
+      );
+
       valid = false;
     }
   }
 
   if (!gender) {
-    setError("genderError", "Please select a gender.");
+
+    setError(
+      "genderError",
+      "Please select a gender."
+    );
+
     valid = false;
   }
 
   if (!file) {
-    setError("dobProofError", "Please upload DOB proof.");
+
+    setError(
+      "dobProofError",
+      "Please upload DOB proof."
+    );
+
     valid = false;
   }
 
   if (
     whatsapp.length !== 10 ||
-    !/^[6-9]\d{9}$/.test(whatsapp)
+    !/^[6-9]\d{9}$/.test(
+      whatsapp
+    )
   ) {
+
     setError(
       "whatsappError",
       "Please enter a valid 10-digit WhatsApp number."
     );
+
     valid = false;
   }
 
@@ -150,506 +224,886 @@ function validateStage1() {
 }
 
 // ============================================================
-// DOB proof
+// DOB proof upload
 // ============================================================
 
-const dobProof = $("dobProof");
-const uploadButton = $("uploadButton");
-const uploadCard = $("uploadCard");
-const fileChip = $("fileChip");
-const fileName = $("fileName");
-const removeFile = $("removeFile");
+const dobProof =
+  $("dobProof");
 
-uploadButton.addEventListener("click", () => dobProof.click());
+const uploadButton =
+  $("uploadButton");
 
-uploadCard.addEventListener("dragover", e => {
-  e.preventDefault();
-  uploadCard.style.borderColor = "var(--primary)";
-});
+const uploadCard =
+  $("uploadCard");
 
-uploadCard.addEventListener("dragleave", () => {
-  uploadCard.style.borderColor = "var(--border-strong)";
-});
+const fileChip =
+  $("fileChip");
 
-uploadCard.addEventListener("drop", e => {
-  e.preventDefault();
-  uploadCard.style.borderColor = "var(--border-strong)";
+const fileName =
+  $("fileName");
 
-  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-    dobProof.files = e.dataTransfer.files;
-    handleDobProof();
+const removeFile =
+  $("removeFile");
+
+uploadButton.addEventListener(
+  "click",
+  () => dobProof.click()
+);
+
+uploadCard.addEventListener(
+  "dragover",
+  e => {
+
+    e.preventDefault();
+
+    uploadCard.style.borderColor =
+      "var(--primary)";
   }
-});
+);
 
-dobProof.addEventListener("change", handleDobProof);
+uploadCard.addEventListener(
+  "dragleave",
+  () => {
+
+    uploadCard.style.borderColor =
+      "var(--border-strong)";
+  }
+);
+
+uploadCard.addEventListener(
+  "drop",
+  e => {
+
+    e.preventDefault();
+
+    uploadCard.style.borderColor =
+      "var(--border-strong)";
+
+    if (
+      e.dataTransfer.files &&
+      e.dataTransfer.files[0]
+    ) {
+
+      dobProof.files =
+        e.dataTransfer.files;
+
+      handleDobProof();
+    }
+  }
+);
+
+dobProof.addEventListener(
+  "change",
+  handleDobProof
+);
 
 function handleDobProof() {
-  const file = dobProof.files[0];
+
+  const file =
+    dobProof.files[0];
+
   if (!file) return;
 
   clearErrors();
 
-  if (!VALID_FILE_TYPES.includes(file.type)) {
+  if (
+    !VALID_FILE_TYPES.includes(
+      file.type
+    )
+  ) {
+
     dobProof.value = "";
-    fileChip.classList.add("hidden");
-    setError("dobProofError", "Use JPG, PNG or PDF.");
+
+    fileChip.classList.add(
+      "hidden"
+    );
+
+    setError(
+      "dobProofError",
+      "Use JPG, PNG or PDF."
+    );
+
     return;
   }
 
-  if (file.size > MAX_FILE_SIZE) {
+  if (
+    file.size >
+    MAX_FILE_SIZE
+  ) {
+
     dobProof.value = "";
-    fileChip.classList.add("hidden");
-    setError("dobProofError", "File must be 5 MB or smaller.");
+
+    fileChip.classList.add(
+      "hidden"
+    );
+
+    setError(
+      "dobProofError",
+      "File must be 5 MB or smaller."
+    );
+
     return;
   }
 
-  fileName.textContent = file.name;
-  fileChip.classList.remove("hidden");
+  fileName.textContent =
+    file.name;
+
+  fileChip.classList.remove(
+    "hidden"
+  );
 }
 
-removeFile.addEventListener("click", () => {
-  dobProof.value = "";
-  fileChip.classList.add("hidden");
-  fileName.textContent = "";
-  $("dobProofError").textContent = "";
-});
+removeFile.addEventListener(
+  "click",
+  () => {
 
-$("whatsapp").addEventListener("input", e => {
-  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-});
+    dobProof.value = "";
 
-$("toEvents").addEventListener("click", () => {
-  if (validateStage1()) {
-    goToStage(2);
-    return;
+    fileChip.classList.add(
+      "hidden"
+    );
+
+    fileName.textContent = "";
+
+    $("dobProofError")
+      .textContent = "";
   }
+);
 
-  const firstError = document.querySelector(
-    ".field-error:not(:empty)"
-  );
+$("whatsapp").addEventListener(
+  "input",
+  e => {
 
-  if (firstError) {
-    firstError.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+    e.target.value =
+      e.target.value
+        .replace(/\D/g, "")
+        .slice(0, 10);
   }
-});
+);
 
-$("backToDetails").addEventListener("click", () => goToStage(1));
+$("toEvents").addEventListener(
+  "click",
+  () => {
+
+    if (
+      validateStage1()
+    ) {
+
+      goToStage(2);
+
+      return;
+    }
+
+    const firstError =
+      document.querySelector(
+        ".field-error:not(:empty)"
+      );
+
+    if (firstError) {
+
+      firstError.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  }
+);
+
+$("backToDetails").addEventListener(
+  "click",
+  () => goToStage(1)
+);
 
 // ============================================================
-// Events + fee
+// Event selection + fee
 // ============================================================
 
 const eventCheckboxes = [
-  ...document.querySelectorAll(".event-checkbox")
+  ...document.querySelectorAll(
+    ".event-checkbox"
+  )
 ];
 
 function getSelectedEvents() {
+
   return eventCheckboxes
-    .filter(cb => cb.checked)
-    .map(cb => cb.value);
+    .filter(
+      cb => cb.checked
+    )
+    .map(
+      cb => cb.value
+    );
 }
 
 function calculateTotal() {
-  return getSelectedEvents().length * FEE_PER_EVENT;
+
+  return (
+    getSelectedEvents()
+      .length *
+    FEE_PER_EVENT
+  );
 }
 
 function updateTotals() {
-  const selected = getSelectedEvents();
 
-  $("eventCount").textContent = selected.length;
-  $("totalAmount").textContent = `₹${calculateTotal()}`;
+  const selected =
+    getSelectedEvents();
+
+  $("eventCount")
+    .textContent =
+      selected.length;
+
+  $("totalAmount")
+    .textContent =
+      `₹${calculateTotal()}`;
 }
 
-eventCheckboxes.forEach(cb =>
-  cb.addEventListener("change", updateTotals)
+eventCheckboxes.forEach(
+  cb =>
+    cb.addEventListener(
+      "change",
+      updateTotals
+    )
 );
 
-$("toPayment").addEventListener("click", () => {
-  const selected = getSelectedEvents();
+$("toPayment").addEventListener(
+  "click",
+  () => {
 
-  if (!selected.length) {
-    showToast("Select at least one event.");
-    return;
+    const selected =
+      getSelectedEvents();
+
+    if (!selected.length) {
+
+      showToast(
+        "Select at least one event."
+      );
+
+      return;
+    }
+
+    $("summaryName")
+      .textContent =
+        $("name")
+          .value
+          .trim() ||
+        "Participant";
+
+    $("summaryEvents")
+      .textContent =
+        `${selected.length} event${
+          selected.length === 1
+            ? ""
+            : "s"
+        }`;
+
+    $("summaryAmount")
+      .textContent =
+        `₹${calculateTotal()}`;
+
+    goToStage(3);
   }
+);
 
-  $("summaryName").textContent =
-    $("name").value.trim() || "Participant";
-
-  $("summaryEvents").textContent =
-    `${selected.length} event${selected.length === 1 ? "" : "s"}`;
-
-  $("summaryAmount").textContent =
-    `₹${calculateTotal()}`;
-
-  goToStage(3);
-});
-
-$("backToEvents").addEventListener("click", () => goToStage(2));
+$("backToEvents").addEventListener(
+  "click",
+  () => goToStage(2)
+);
 
 // ============================================================
 // Payment screenshot
 // ============================================================
 
-const paymentScreenshot = $("paymentScreenshot");
-const chooseScreenshot = $("chooseScreenshot");
-const paymentFile = $("paymentFile");
-const paymentFileName = $("paymentFileName");
-const paymentFileMeta = $("paymentFileMeta");
-const removePaymentFile = $("removePaymentFile");
-const uploadStatus = $("uploadStatus");
-const finishButton = $("finishButton");
-const copyUpi = $("copyUpi");
+const paymentScreenshot =
+  $("paymentScreenshot");
 
-let selectedPaymentFile = null;
+const chooseScreenshot =
+  $("chooseScreenshot");
+
+const paymentFile =
+  $("paymentFile");
+
+const paymentFileName =
+  $("paymentFileName");
+
+const paymentFileMeta =
+  $("paymentFileMeta");
+
+const removePaymentFile =
+  $("removePaymentFile");
+
+const uploadStatus =
+  $("uploadStatus");
+
+const finishButton =
+  $("finishButton");
+
+const copyUpi =
+  $("copyUpi");
+
+let selectedPaymentFile =
+  null;
 
 chooseScreenshot.addEventListener(
   "click",
-  () => paymentScreenshot.click()
+  () =>
+    paymentScreenshot.click()
 );
 
-paymentScreenshot.addEventListener("change", () => {
-  const file = paymentScreenshot.files[0];
-  if (!file) return;
+paymentScreenshot.addEventListener(
+  "change",
+  () => {
 
-  uploadStatus.textContent = "";
+    const file =
+      paymentScreenshot.files[0];
 
-  if (!VALID_FILE_TYPES.includes(file.type)) {
-    paymentScreenshot.value = "";
-    selectedPaymentFile = null;
-    paymentFile.classList.add("hidden");
-    finishButton.disabled = true;
-    uploadStatus.textContent = "Please choose a JPG, PNG or PDF.";
-    return;
-  }
+    if (!file) return;
 
-  if (file.size > MAX_FILE_SIZE) {
-    paymentScreenshot.value = "";
-    selectedPaymentFile = null;
-    paymentFile.classList.add("hidden");
-    finishButton.disabled = true;
-    uploadStatus.textContent =
-      "The screenshot must be 5 MB or smaller.";
-    return;
-  }
+    uploadStatus.textContent = "";
 
-  selectedPaymentFile = file;
+    if (
+      !VALID_FILE_TYPES.includes(
+        file.type
+      )
+    ) {
 
-  paymentFileName.textContent = file.name;
-  paymentFileMeta.textContent =
-    `${formatFileSize(file.size)} · Attached`;
+      paymentScreenshot.value =
+        "";
 
-  paymentFile.classList.remove("hidden");
-  finishButton.disabled = false;
+      selectedPaymentFile =
+        null;
 
-  uploadStatus.textContent =
-    "Screenshot attached. It will be submitted with your registration.";
-});
+      paymentFile.classList.add(
+        "hidden"
+      );
 
-removePaymentFile.addEventListener("click", () => {
-  paymentScreenshot.value = "";
-  selectedPaymentFile = null;
-  paymentFile.classList.add("hidden");
-  finishButton.disabled = true;
-  uploadStatus.textContent = "";
-});
+      finishButton.disabled =
+        true;
 
-copyUpi.addEventListener("click", async () => {
-  const upiId = $("upiId").textContent.trim();
+      uploadStatus.textContent =
+        "Please choose a JPG, PNG or PDF.";
 
-  try {
-    await navigator.clipboard.writeText(upiId);
-    copyUpi.textContent = "Copied";
+      return;
+    }
 
-    setTimeout(
-      () => copyUpi.textContent = "Copy",
-      1400
+    if (
+      file.size >
+      MAX_FILE_SIZE
+    ) {
+
+      paymentScreenshot.value =
+        "";
+
+      selectedPaymentFile =
+        null;
+
+      paymentFile.classList.add(
+        "hidden"
+      );
+
+      finishButton.disabled =
+        true;
+
+      uploadStatus.textContent =
+        "The screenshot must be 5 MB or smaller.";
+
+      return;
+    }
+
+    selectedPaymentFile =
+      file;
+
+    paymentFileName.textContent =
+      file.name;
+
+    paymentFileMeta.textContent =
+      `${formatFileSize(file.size)} · Attached`;
+
+    paymentFile.classList.remove(
+      "hidden"
     );
-  } catch {
-    showToast(upiId);
+
+    finishButton.disabled =
+      false;
+
+    uploadStatus.textContent =
+      "Screenshot attached. It will be submitted with your registration.";
   }
-});
+);
+
+removePaymentFile.addEventListener(
+  "click",
+  () => {
+
+    paymentScreenshot.value =
+      "";
+
+    selectedPaymentFile =
+      null;
+
+    paymentFile.classList.add(
+      "hidden"
+    );
+
+    finishButton.disabled =
+      true;
+
+    uploadStatus.textContent =
+      "";
+  }
+);
+
+copyUpi.addEventListener(
+  "click",
+  async () => {
+
+    const upiId =
+      $("upiId")
+        .textContent
+        .trim();
+
+    try {
+
+      await navigator.clipboard
+        .writeText(upiId);
+
+      copyUpi.textContent =
+        "Copied";
+
+      setTimeout(
+        () =>
+          copyUpi.textContent =
+            "Copy",
+        1400
+      );
+
+    } catch {
+
+      showToast(
+        upiId
+      );
+    }
+  }
+);
 
 // ============================================================
-// File -> data URL
+// Files
 // ============================================================
 
 function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
 
-    reader.onload = () => resolve(reader.result);
+  return new Promise(
+    (resolve, reject) => {
 
-    reader.onerror = () =>
-      reject(
-        new Error(`Could not read ${file.name}.`)
-      );
+      const reader =
+        new FileReader();
 
-    reader.readAsDataURL(file);
-  });
+      reader.onload = () =>
+        resolve(
+          reader.result
+        );
+
+      reader.onerror = () =>
+        reject(
+          new Error(
+            `Could not read ${file.name}.`
+          )
+        );
+
+      reader.readAsDataURL(file);
+    }
+  );
 }
 
 // ============================================================
-// Submit to Apps Script
+// Cross-origin submission
 //
-// Cross-origin fetch is deliberately avoided. A hidden HTML
-// form posts to an invisible iframe, and the Apps Script response
-// uses postMessage() to report success/error back to this page.
+// IMPORTANT:
+// We do NOT try to read the POST response.
+//
+// Firefox/Apps Script can follow Google's ContentService
+// redirects through googleusercontent.com, and an invisible
+// iframe + postMessage response can surface a network error.
+//
+// Instead:
+// 1. POST the registration with fetch(mode:"no-cors")
+// 2. Give the request a random submission token
+// 3. Poll Apps Script using a JSONP GET for that token
+//
+// The JSONP response contains only the status/registration ID
+// for the unguessable token.
 // ============================================================
 
-let submissionIframe = null;
+function generateSubmissionToken() {
 
-function createSubmissionIframe() {
-  const iframe = document.createElement("iframe");
-  const name = `swimResponse_${Date.now()}`;
+  const bytes =
+    new Uint8Array(24);
 
-  iframe.name = name;
-  iframe.id = name;
-  iframe.title = "Registration submission";
-  iframe.setAttribute("aria-hidden", "true");
+  crypto.getRandomValues(
+    bytes
+  );
 
-  Object.assign(iframe.style, {
-    position: "fixed",
-    width: "1px",
-    height: "1px",
-    border: "0",
-    opacity: "0",
-    pointerEvents: "none"
-  });
-
-  document.body.appendChild(iframe);
-  submissionIframe = iframe;
-
-  return iframe;
-}
-
-function removeSubmissionIframe() {
-  if (submissionIframe?.parentNode) {
-    submissionIframe.parentNode.removeChild(submissionIframe);
-  }
-
-  submissionIframe = null;
-}
-
-function appendHiddenInput(form, name, value) {
-  const input = document.createElement("input");
-
-  input.type = "hidden";
-  input.name = name;
-  input.value = value == null ? "" : String(value);
-
-  form.appendChild(input);
+  return Array
+    .from(bytes)
+    .map(
+      byte =>
+        byte.toString(16)
+          .padStart(2, "0")
+    )
+    .join("");
 }
 
 async function submitRegistration() {
-  if (!validateStage1()) {
+
+  if (
+    !validateStage1()
+  ) {
+
     goToStage(1);
+
     return;
   }
 
-  const events = getSelectedEvents();
+  const events =
+    getSelectedEvents();
 
   if (!events.length) {
+
     goToStage(2);
-    showToast("Select at least one event.");
+
+    showToast(
+      "Select at least one event."
+    );
+
     return;
   }
 
   if (!selectedPaymentFile) {
-    showToast("Please attach your payment screenshot.");
+
+    showToast(
+      "Please attach your payment screenshot."
+    );
+
     return;
   }
 
-  const dobProofFile = dobProof.files[0];
-  const paymentFile = selectedPaymentFile;
+  const dobProofFile =
+    dobProof.files[0];
+
+  const paymentFile =
+    selectedPaymentFile;
+
+  const submissionToken =
+    generateSubmissionToken();
 
   setSubmitting(true);
 
   try {
+
+    uploadStatus.textContent =
+      "Preparing your documents…";
+
     const [
       dobProofData,
       paymentScreenshotData
     ] = await Promise.all([
-      fileToDataUrl(dobProofFile),
-      fileToDataUrl(paymentFile)
+
+      fileToDataUrl(
+        dobProofFile
+      ),
+
+      fileToDataUrl(
+        paymentFile
+      )
     ]);
 
-    const iframe = createSubmissionIframe();
+    uploadStatus.textContent =
+      "Submitting registration…";
 
-    const form = document.createElement("form");
+    const body =
+      new URLSearchParams();
 
-    form.method = "POST";
-    form.action = APPS_SCRIPT_URL;
-    form.target = iframe.name;
-    form.style.display = "none";
-    form.enctype = "application/x-www-form-urlencoded";
-
-    appendHiddenInput(
-      form,
+    body.set(
       "name",
-      $("name").value.trim()
+      $("name")
+        .value
+        .trim()
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "dob",
       $("dob").value
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "gender",
       $("gender").value
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "whatsapp",
-      $("whatsapp").value.replace(/\D/g, "")
+      $("whatsapp")
+        .value
+        .replace(/\D/g, "")
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "events",
       JSON.stringify(events)
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "paymentReference",
-      $("paymentReference").value.trim()
+      $("paymentReference")
+        .value
+        .trim()
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "dobProofBase64",
       dobProofData
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "dobProofMimeType",
       dobProofFile.type
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "paymentScreenshotBase64",
       paymentScreenshotData
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "paymentScreenshotMimeType",
       paymentFile.type
     );
 
-    appendHiddenInput(
-      form,
+    body.set(
       "clientSource",
       "gitlab-pages"
     );
 
-    document.body.appendChild(form);
+    body.set(
+      "submissionToken",
+      submissionToken
+    );
 
-    await waitForAppsScriptResponse(form, events);
+    // We use no-cors deliberately.
+    // The POST is allowed to leave the page, but its response
+    // is intentionally opaque. We use JSONP polling below.
+    await fetch(
+      APPS_SCRIPT_URL,
+      {
+        method: "POST",
+        mode: "no-cors",
+        body
+      }
+    );
+
+    uploadStatus.textContent =
+      "Registration sent. Waiting for confirmation…";
+
+    const result =
+      await pollSubmissionStatus(
+        submissionToken
+      );
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message ||
+        "Registration could not be completed."
+      );
+    }
+
+    showSuccess(
+      result.registrationId,
+      events,
+      result.totalFee ??
+        calculateTotal()
+    );
 
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "Swimming registration:",
+      error
+    );
 
     showSubmissionError(
       error.message ||
       "Something went wrong. Please try again."
     );
 
+  } finally {
+
     setSubmitting(false);
   }
 }
 
-function waitForAppsScriptResponse(form, events) {
-  return new Promise((resolve, reject) => {
-    let finished = false;
+// ============================================================
+// JSONP status polling
+// ============================================================
 
-    const timeout = setTimeout(() => {
-      if (finished) return;
+function pollSubmissionStatus(
+  token
+) {
 
-      finished = true;
-      cleanup();
+  return new Promise(
+    (resolve, reject) => {
 
-      reject(
-        new Error(
-          "The submission is taking too long. Please check your connection and try again."
-        )
-      );
-    }, 60000);
+      const callbackName =
+        `__swimStatus_${Date.now()}_${Math.floor(
+          Math.random() * 100000
+        )}`;
 
-    function cleanup() {
-      clearTimeout(timeout);
+      let attempts = 0;
 
-      window.removeEventListener(
-        "message",
-        handleMessage
-      );
+      const maxAttempts =
+        90;
 
-      if (form?.parentNode) {
-        form.parentNode.removeChild(form);
-      }
+      let script = null;
 
-      setTimeout(removeSubmissionIframe, 1000);
-    }
+      const timeout =
+        setInterval(
+          () => {
 
-    function handleMessage(event) {
-      if (
-        !submissionIframe ||
-        event.source !== submissionIframe.contentWindow
-      ) {
-        return;
-      }
+            attempts += 1;
 
-      const data = event.data;
+            if (
+              attempts >
+              maxAttempts
+            ) {
 
-      if (
-        !data ||
-        typeof data.success !== "boolean"
-      ) {
-        return;
-      }
+              cleanup();
 
-      if (finished) return;
+              reject(
+                new Error(
+                  "The registration server did not confirm the submission within 90 seconds. Please check the Nashik Swims sheet before trying again."
+                )
+              );
 
-      finished = true;
-      cleanup();
+              return;
+            }
 
-      if (data.success) {
-        showSuccess(
-          data.registrationId,
-          events,
-          calculateTotal()
+            requestStatus();
+
+          },
+          1000
         );
 
-        resolve(data);
-      } else {
-        reject(
-          new Error(
-            data.message ||
-            "Registration failed."
-          )
+      window[callbackName] =
+        result => {
+
+          if (
+            !result ||
+            !result.status
+          ) {
+            return;
+          }
+
+          if (
+            result.status ===
+            "pending"
+          ) {
+            return;
+          }
+
+          cleanup();
+
+          if (
+            result.status ===
+            "success"
+          ) {
+
+            resolve({
+              success: true,
+              registrationId:
+                result.registrationId,
+              totalFee:
+                result.totalFee
+            });
+
+          } else {
+
+            resolve({
+              success: false,
+              message:
+                result.message ||
+                "Registration failed."
+            });
+          }
+        };
+
+      function requestStatus() {
+
+        script =
+          document.createElement(
+            "script"
+          );
+
+        script.src =
+          APPS_SCRIPT_URL +
+          "?callback=" +
+          encodeURIComponent(
+            callbackName
+          ) +
+          "&token=" +
+          encodeURIComponent(
+            token
+          ) +
+          "&_=" +
+          Date.now();
+
+        script.async = true;
+
+        script.onerror =
+          () => {
+            // A transient JSONP load error is ignored.
+            // The next poll will try again.
+          };
+
+        document.body.appendChild(
+          script
         );
       }
+
+      function cleanup() {
+
+        clearInterval(
+          timeout
+        );
+
+        try {
+          delete window[
+            callbackName
+          ];
+        } catch {}
+
+        if (
+          script &&
+          script.parentNode
+        ) {
+          script.parentNode
+            .removeChild(script);
+        }
+      }
+
+      // First request immediately.
+      requestStatus();
     }
-
-    window.addEventListener(
-      "message",
-      handleMessage
-    );
-
-    form.submit();
-  });
+  );
 }
 
-function setSubmitting(submitting) {
+// ============================================================
+// UI states
+// ============================================================
+
+function setSubmitting(
+  submitting
+) {
+
   finishButton.disabled =
     submitting ||
     !selectedPaymentFile;
@@ -660,48 +1114,88 @@ function setSubmitting(submitting) {
   );
 
   if (submitting) {
+
     finishButton.innerHTML =
       `<span class="button-spinner"></span> Submitting…`;
 
-    uploadStatus.textContent =
-      "Uploading your documents and saving your registration…";
   } else {
+
     finishButton.innerHTML =
       `Submit registration <span>→</span>`;
   }
 
-  chooseScreenshot.disabled = submitting;
-  removePaymentFile.disabled = submitting;
-  $("backToEvents").disabled = submitting;
+  chooseScreenshot.disabled =
+    submitting;
+
+  removePaymentFile.disabled =
+    submitting;
+
+  $("backToEvents").disabled =
+    submitting;
 }
 
-function showSubmissionError(message) {
-  uploadStatus.textContent = message;
-  showToast(message);
+function showSubmissionError(
+  message
+) {
+
+  uploadStatus.textContent =
+    message;
+
+  showToast(
+    message
+  );
 }
 
-function showSuccess(registrationId, events, total) {
-  setSubmitting(false);
+function showSuccess(
+  registrationId,
+  events,
+  total
+) {
 
-  $("successRegistrationId").textContent =
-    registrationId;
+  $("successRegistrationId")
+    .textContent =
+      registrationId;
 
-  $("successName").textContent =
-    $("name").value.trim();
+  $("successName")
+    .textContent =
+      $("name")
+        .value
+        .trim();
 
-  $("successEvents").textContent =
-    `${events.length} event${events.length === 1 ? "" : "s"}`;
+  $("successEvents")
+    .textContent =
+      `${events.length} event${
+        events.length === 1
+          ? ""
+          : "s"
+      }`;
 
-  $("successAmount").textContent =
-    `₹${total}`;
+  $("successAmount")
+    .textContent =
+      `₹${total}`;
 
-  $("registrationForm").classList.add("hidden");
-  $("successState").classList.remove("hidden");
+  $("registrationForm")
+    .classList.add(
+      "hidden"
+    );
 
-  steps.forEach(step => {
-    step.classList.add("complete");
-    step.classList.remove("active");
-  });
+  $("successState")
+    .classList.remove(
+      "hidden"
+    );
+
+  steps.forEach(
+    step => {
+
+      step.classList.add(
+        "complete"
+      );
+
+      step.classList.remove(
+        "active"
+      );
+    }
+  );
 
   window.scrollTo({
     top: 0,
@@ -709,29 +1203,44 @@ function showSuccess(registrationId, events, total) {
   });
 }
 
-// ============================================================
-// UI helpers
-// ============================================================
+function showToast(
+  message
+) {
 
-function showToast(message) {
-  const toast = $("toast");
+  const toast =
+    $("toast");
 
-  toast.textContent = message;
-  toast.classList.add("show");
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
 
   setTimeout(
-    () => toast.classList.remove("show"),
-    2200
+    () =>
+      toast.classList.remove(
+        "show"
+      ),
+    2500
   );
 }
 
-function formatFileSize(bytes) {
+function formatFileSize(
+  bytes
+) {
+
   if (bytes < 1024) {
     return `${bytes} B`;
   }
 
-  if (bytes < 1024 * 1024) {
-    return `${Math.round(bytes / 1024)} KB`;
+  if (
+    bytes <
+    1024 * 1024
+  ) {
+    return `${Math.round(
+      bytes / 1024
+    )} KB`;
   }
 
   return `${(

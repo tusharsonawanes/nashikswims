@@ -1,39 +1,39 @@
-# Swimming Challenge — Mobile Registration UI
+# Swimming Challenge — Connected v5
 
-A mobile-first static registration prototype designed for GitLab Pages.
+Mobile-first swimming challenge registration for GitLab Pages, connected to Google Apps Script, Google Sheets, and Google Drive.
 
-## Included
+## Why v5
 
-- Apple-inspired responsive UI
-- Light / dark theme toggle
-- Swimming-inspired visual treatment
-- Stage 1: Name, DOB, DOB proof upload, Gender, WhatsApp number
-- Stage 2: 50m Freestyle, 50m Backstroke, 50m Breaststroke, 50m Butterfly
-- Live event count and ₹200/event calculation
-- Stage 3 payment flow with supplied QR code, alternative UPI ID, screenshot chooser, transaction ID field, and final submission
-- Basic client-side validation
-- No external libraries or paid services
+The previous hidden-iframe + `postMessage()` response approach could surface `NS_ERROR_DOM_NETWORK_ERR` in Firefox because Apps Script Content Service responses are redirected through Google's `googleusercontent.com` endpoint.
 
-## GitLab Pages
+This version does not attempt to read the cross-origin POST response. The GitLab page submits with a simple `fetch()` using `mode: "no-cors"`, then polls a read-only Apps Script JSONP status endpoint using a random submission token.
 
-Push these files to a GitLab repository. The included `.gitlab-ci.yml` deploys the static site to GitLab Pages from the default branch.
+## Backend
 
-## Next backend step
+`apps-script/Code.gs` is the complete backend to paste into the Google Apps Script project.
 
-The GitLab frontend is connected to the supplied Google Apps Script `/exec` endpoint. Final submission sends participant data and the two file uploads to Apps Script.
+It writes to the private `Nashik Swims` sheet tab and saves DOB proof and payment screenshot files into the private Drive folder structure:
 
-The next implementation can connect the form to:
-- Google Apps Script
-- Google Sheets
-- Google Drive for DOB proof / payment screenshots
-- QR payment instructions
-- final confirmation + registration ID
+`Swimming Challenge 2026/Participant Documents`
 
+The server recalculates the fee at ₹200 per valid event and generates `SWIM-0001`, `SWIM-0002`, etc.
 
-## Configured backend
+## Deploy/update
 
-The frontend is connected to the supplied Google Apps Script web-app endpoint.
+After pasting `apps-script/Code.gs` into Apps Script:
 
-The public GitLab site uses a hidden HTML form POST to an invisible iframe rather than a cross-origin `fetch()` call. Apps Script processes the registration, writes to the Google Sheet, saves the files to Google Drive, and sends the result back to the page via `postMessage`.
+1. Save.
+2. Run `setupSwimmingChallenge` once if the Sheet/Drive setup needs creating/updating.
+3. Deploy -> Manage deployments.
+4. Edit the existing Web app deployment and create a new version.
+5. Execute as: Me.
+6. Who has access: Anyone.
+7. Deploy/update.
 
-Keep the Google Sheet and Drive folders private. Do not commit Google credentials or OAuth tokens to GitLab.
+The existing `/exec` URL can remain the same when the deployment is updated.
+
+Then publish the root frontend files to GitLab Pages.
+
+## Privacy
+
+Keep the Google Sheet and Drive folders restricted/private. The GitLab site does not directly access either one.
