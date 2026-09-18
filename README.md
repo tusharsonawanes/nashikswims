@@ -190,3 +190,38 @@ The payment flow now remains:
 - Submit registration
 
 No automatic UPI-app redirect is used.
+
+
+## v13: operational data model + submit animation
+
+### Spreadsheet model
+
+- `Registrations`: one row per participant registration.
+- `Nashik Swims`: one row per selected event. This is the primary pool-day
+  operational sheet.
+- `Event Entries`: compatibility mirror for the event-level rows.
+
+A participant selecting 10 events produces:
+- 1 row in `Registrations`
+- 10 rows in `Nashik Swims`
+- 10 mirrored rows in `Event Entries`
+
+### Existing data migration
+
+Run the Apps Script function `migrateToV13Model()` ONCE.
+
+It creates `Nashik Swims Legacy Backup`, preserves the existing test data,
+converts legacy IDs such as `SWIM-0004` to `004`, creates the parent
+registration rows, creates event-level rows, and rebuilds `Nashik Swims` as
+the event-level table.
+
+### Submission animation
+
+When the final Submit button is pressed, a responsive pool animation appears
+with a swimmer moving from left to right, animated strokes, bubbles, and waves.
+It remains visible while the registration is being uploaded/confirmed and
+closes automatically on success or error.
+
+### UPI
+
+The UPI deeplink remains intentionally removed. QR and manual UPI ID remain.

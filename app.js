@@ -730,6 +730,12 @@ const uploadStatus =
 const finishButton =
   $("finishButton");
 
+const submitOverlay =
+  $("submitOverlay");
+
+const submitProgressText =
+  $("submitProgressText");
+
 const copyUpi =
   $("copyUpi");
 
@@ -1009,6 +1015,11 @@ async function submitRegistration() {
     uploadStatus.textContent =
       "Preparing your documents…";
 
+    if (submitProgressText) {
+      submitProgressText.textContent =
+        "Preparing your details and documents…";
+    }
+
     const [
       dobProofData,
       paymentScreenshotData
@@ -1023,6 +1034,11 @@ async function submitRegistration() {
 
     uploadStatus.textContent =
       "Submitting registration…";
+
+    if (submitProgressText) {
+      submitProgressText.textContent =
+        "Swimming your registration to the finish…";
+    }
 
     const body =
       new URLSearchParams();
@@ -1137,6 +1153,11 @@ async function submitRegistration() {
 
     uploadStatus.textContent =
       "Registration sent. Confirming your registration number…";
+
+    if (submitProgressText) {
+      submitProgressText.textContent =
+        "Almost there — confirming your registration number…";
+    }
 
     const result =
       await pollSubmissionStatus(
@@ -1343,6 +1364,39 @@ function pollSubmissionStatus(
 }
 
 // ============================================================
+// Submission animation
+// ============================================================
+
+function showSubmitOverlay(message) {
+  if (!submitOverlay) return;
+
+  submitProgressText.textContent =
+    message;
+
+  submitOverlay.classList.remove(
+    "hidden"
+  );
+
+  submitOverlay.setAttribute(
+    "aria-busy",
+    "true"
+  );
+}
+
+function hideSubmitOverlay() {
+  if (!submitOverlay) return;
+
+  submitOverlay.classList.add(
+    "hidden"
+  );
+
+  submitOverlay.setAttribute(
+    "aria-busy",
+    "false"
+  );
+}
+
+// ============================================================
 // UI states
 // ============================================================
 
@@ -1353,6 +1407,14 @@ function setSubmitting(
   finishButton.disabled =
     submitting ||
     !selectedPaymentFile;
+
+  if (submitting) {
+    showSubmitOverlay(
+      "Preparing your details and documents…"
+    );
+  } else {
+    hideSubmitOverlay();
+  }
 
   finishButton.classList.toggle(
     "submitting",

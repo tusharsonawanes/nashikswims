@@ -1226,3 +1226,328 @@ button {
 }
 
 
+
+
+/* ============================================================
+   Submission swimming animation
+   ============================================================ */
+
+.submit-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(10,132,255,.18), transparent 38%),
+    rgba(5,16,29,.60);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.submit-animation-card {
+  width: min(100%, 680px);
+  padding: clamp(22px, 5vw, 34px);
+  border-radius: 28px;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  box-shadow: 0 35px 90px rgba(0,0,0,.28);
+}
+
+.submit-animation-header {
+  text-align: center;
+}
+
+.submit-animation-header h2 {
+  margin: 10px 0 7px;
+  font-size: clamp(28px, 6vw, 42px);
+  letter-spacing: -.05em;
+}
+
+.submit-animation-header p {
+  margin: 0 auto;
+  color: var(--text-soft);
+  max-width: 480px;
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+.pool-animation {
+  position: relative;
+  height: 165px;
+  margin-top: 25px;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.16);
+  background:
+    linear-gradient(180deg, rgba(72,184,255,.22), rgba(8,112,178,.18)),
+    linear-gradient(180deg, #0a72ad, #07547e);
+  box-shadow:
+    inset 0 12px 30px rgba(255,255,255,.06),
+    inset 0 -18px 40px rgba(0,0,0,.14);
+}
+
+.pool-animation::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 43px,
+      rgba(255,255,255,.055) 43px 45px
+    );
+  opacity: .65;
+}
+
+.lane-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 36px;
+  transform: translateY(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255,255,255,.08),
+    transparent 68%
+  );
+}
+
+.lane-rope {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  opacity: .8;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.78) 0 2px, transparent 2.5px)
+    0 50% / 12px 12px repeat-x;
+}
+
+.lane-rope-top { top: 26px; }
+.lane-rope-bottom { bottom: 26px; }
+
+.swimmer {
+  position: absolute;
+  left: -110px;
+  top: 50%;
+  width: 95px;
+  height: 44px;
+  transform: translateY(-50%);
+  animation: swim-across 4.8s ease-in-out infinite;
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,.12));
+}
+
+.swimmer-head {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #f3c7a7;
+}
+
+.swimmer-body {
+  position: absolute;
+  left: 23px;
+  top: 14px;
+  width: 38px;
+  height: 13px;
+  border-radius: 999px 40% 40% 999px;
+  background: #fff;
+  transform: rotate(-6deg);
+}
+
+.swimmer-arm {
+  position: absolute;
+  width: 34px;
+  height: 6px;
+  border-radius: 999px;
+  background: #fff;
+  transform-origin: left center;
+}
+
+.swimmer-arm-front {
+  left: 50px;
+  top: 11px;
+  transform: rotate(-28deg);
+  animation: stroke-front .62s ease-in-out infinite alternate;
+}
+
+.swimmer-arm-back {
+  left: 47px;
+  top: 26px;
+  transform: rotate(36deg);
+  animation: stroke-back .62s ease-in-out infinite alternate;
+}
+
+.swimmer-leg {
+  position: absolute;
+  width: 32px;
+  height: 6px;
+  border-radius: 999px;
+  background: #fff;
+  transform-origin: left center;
+}
+
+.swimmer-leg-top {
+  left: 50px;
+  top: 17px;
+  transform: rotate(23deg);
+  animation: kick-top .5s ease-in-out infinite alternate;
+}
+
+.swimmer-leg-bottom {
+  left: 49px;
+  top: 24px;
+  transform: rotate(-19deg);
+  animation: kick-bottom .5s ease-in-out infinite alternate;
+}
+
+.water-ripple {
+  position: absolute;
+  width: 70px;
+  height: 16px;
+  border-top: 3px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+  right: -90px;
+  animation: ripple-left 2.6s linear infinite;
+}
+
+.ripple-one { top: 58px; animation-delay: .1s; }
+.ripple-two { top: 78px; animation-delay: .8s; width: 58px; }
+.ripple-three { top: 102px; animation-delay: 1.4s; width: 45px; }
+
+.bubble {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  left: 46%;
+  bottom: 58px;
+  animation: bubble-float 1.7s ease-in infinite;
+  opacity: 0;
+}
+
+.bubble-one { animation-delay: .2s; }
+.bubble-two { animation-delay: .55s; left: 44%; width: 4px; height: 4px; }
+.bubble-three { animation-delay: .9s; left: 48%; width: 8px; height: 8px; }
+.bubble-four { animation-delay: 1.2s; left: 42%; width: 5px; height: 5px; }
+.bubble-five { animation-delay: 1.45s; left: 50%; width: 4px; height: 4px; }
+
+.submit-animation-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  justify-content: center;
+  margin-top: 17px;
+  color: var(--text-soft);
+  font-size: 11px;
+  text-align: center;
+}
+
+.loading-dots::after {
+  content: "";
+  display: inline-block;
+  width: 1.8em;
+  text-align: left;
+  animation: dots 1.4s steps(4, end) infinite;
+}
+
+@keyframes swim-across {
+  0%   { left: -110px; }
+  45%  { left: 42%; transform: translate(-50%, -50%) scaleX(1); }
+  50%  { left: 50%; transform: translate(-50%, -50%) scaleX(1); }
+  55%  { left: 58%; transform: translate(-50%, -50%) scaleX(-1); }
+  100% { left: calc(100% + 110px); transform: translateY(-50%) scaleX(-1); }
+}
+
+@keyframes stroke-front {
+  from { transform: rotate(-28deg); }
+  to   { transform: rotate(23deg); }
+}
+
+@keyframes stroke-back {
+  from { transform: rotate(36deg); }
+  to   { transform: rotate(-16deg); }
+}
+
+@keyframes kick-top {
+  from { transform: rotate(23deg); }
+  to   { transform: rotate(-6deg); }
+}
+
+@keyframes kick-bottom {
+  from { transform: rotate(-19deg); }
+  to   { transform: rotate(8deg); }
+}
+
+@keyframes ripple-left {
+  from {
+    right: -90px;
+    opacity: 0;
+    transform: scaleX(.7);
+  }
+  25% { opacity: .65; }
+  100% {
+    right: 100%;
+    opacity: 0;
+    transform: scaleX(1.25);
+  }
+}
+
+@keyframes bubble-float {
+  0% {
+    transform: translate(0, 0) scale(.75);
+    opacity: 0;
+  }
+  25% { opacity: .75; }
+  100% {
+    transform: translate(-8px, -68px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+@keyframes dots {
+  0%, 20% { content: ""; }
+  35% { content: "."; }
+  55% { content: ".."; }
+  75%, 100% { content: "..."; }
+}
+
+@media (max-width: 680px) {
+  .submit-animation-card {
+    border-radius: 24px;
+  }
+
+  .pool-animation {
+    height: 145px;
+  }
+
+  .submit-animation-footer {
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swimmer,
+  .swimmer-arm-front,
+  .swimmer-arm-back,
+  .swimmer-leg-top,
+  .swimmer-leg-bottom,
+  .water-ripple,
+  .bubble,
+  .loading-dots::after {
+    animation: none !important;
+  }
+
+  .swimmer {
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
