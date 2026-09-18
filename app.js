@@ -1410,7 +1410,7 @@ function setSubmitting(
 
   if (submitting) {
     showSubmitOverlay(
-      "Preparing your details and documents…"
+      "Saving your details and documents…"
     );
   } else {
     hideSubmitOverlay();

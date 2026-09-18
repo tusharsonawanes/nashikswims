@@ -225,3 +225,51 @@ closes automatically on success or error.
 ### UPI
 
 The UPI deeplink remains intentionally removed. QR and manual UPI ID remain.
+
+
+# v14 — clean data model
+
+## Important: deploy the new Code.gs version
+
+The previous backend had multiple helper/migration paths mixed together. That
+made it easy for the deployed version and the spreadsheet structure to drift.
+
+v14 uses one clear production model:
+
+### `Registrations`
+One row per participant registration.
+
+### `Nashik Swims`
+One row per selected event.
+
+Example:
+
+Registration 005 selects two events:
+
+`Registrations`
+- 005 | Tushar | 2 events | ₹400
+
+`Nashik Swims`
+- 005-01 | 005 | Tushar | 50m Freestyle
+- 005-02 | 005 | Tushar | 50m Backstroke
+
+## Existing data
+
+Run `migrateLegacyNashikSwims()` once after replacing Code.gs. It backs up the
+old Nashik Swims tab, converts old IDs such as SWIM-0004 to 004, creates
+registration rows, and rebuilds Nashik Swims as the event-level table.
+
+## Future competitions
+
+Add new entries under `CONFIG.COMPETITIONS`. Each competition has its own
+event list and fee. Registration numbering restarts per competition.
+
+## Submission animation
+
+The final Submit button shows a looping swimmer moving through a pool lane,
+with waves and bubbles, until the backend confirms success or reports an error.
+
+## UPI
+
+The automatic UPI deeplink remains removed. The QR code and manual UPI ID
+remain on the payment step.
