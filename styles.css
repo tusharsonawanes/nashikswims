@@ -1068,3 +1068,142 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+.success-state {
+  margin-top: 2px;
+}
+
+.success-card {
+  text-align: center;
+  padding-top: clamp(30px, 7vw, 54px);
+  padding-bottom: clamp(30px, 7vw, 54px);
+}
+
+.success-mark {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 17px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(145deg, #1db878, #0f9a5f);
+  box-shadow: 0 16px 34px rgba(29,184,120,.22);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.success-card h2 {
+  margin: 8px 0 8px;
+  font-size: clamp(33px, 7vw, 50px);
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.success-card > p {
+  margin: 0 auto;
+  max-width: 430px;
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+.success-id {
+  margin: 24px auto 16px;
+  width: min(100%, 390px);
+  padding: 17px;
+  border-radius: 18px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+}
+
+.success-id span,
+.success-details span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.success-id strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--primary-deep);
+  font-size: 26px;
+  letter-spacing: .04em;
+}
+
+.success-details {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface-solid);
+  text-align: left;
+}
+
+.success-details > div {
+  padding: 0 14px;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+}
+
+.success-details > div:first-child {
+  padding-left: 2px;
+}
+
+.success-details > div:last-child {
+  border-right: 0;
+}
+
+.success-details strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.success-note {
+  margin-top: 18px !important;
+  font-size: 12px;
+}
+
+.submitting {
+  pointer-events: none;
+  opacity: .8;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.45);
+  border-top-color: #fff;
+  display: inline-block;
+  animation: swim-spin .7s linear infinite;
+}
+
+@keyframes swim-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 680px) {
+  .success-details {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .success-details > div,
+  .success-details > div:first-child {
+    padding: 0;
+    border-right: 0;
+  }
+
+  .success-details > div:not(:first-child) {
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+}

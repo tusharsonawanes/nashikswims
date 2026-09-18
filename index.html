@@ -210,7 +210,7 @@
               <div>
                 <div class="section-kicker">Stage 3</div>
                 <h2>Complete your payment</h2>
-                <p>Scan the QR code or use the UPI ID below. Then send your payment screenshot.</p>
+                <p>Scan the QR code or use the UPI ID below. Then attach your payment screenshot.</p>
               </div>
               <div class="water-icon">₹</div>
             </div>
@@ -290,6 +290,38 @@
         </section>
       </form>
     </main>
+
+
+    <section class="success-state hidden" id="successState" aria-live="polite">
+      <div class="card glass-card success-card">
+        <div class="success-mark">✓</div>
+        <div class="section-kicker">Registration complete</div>
+        <h2>You’re in.</h2>
+        <p>Your registration has been submitted successfully.</p>
+
+        <div class="success-id">
+          <span>Registration ID</span>
+          <strong id="successRegistrationId">SWIM-0001</strong>
+        </div>
+
+        <div class="success-details">
+          <div>
+            <span>Participant</span>
+            <strong id="successName">—</strong>
+          </div>
+          <div>
+            <span>Events</span>
+            <strong id="successEvents">—</strong>
+          </div>
+          <div>
+            <span>Total</span>
+            <strong id="successAmount">₹0</strong>
+          </div>
+        </div>
+
+        <p class="success-note">Please keep your registration ID for future communication.</p>
+      </div>
+    </section>
 
     <footer class="footer">
       <span>Swimming Challenge</span>
