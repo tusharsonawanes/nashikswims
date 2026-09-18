@@ -716,216 +716,122 @@ function fileToDataUrl(file) {
 }
 
 // ============================================================
-// Cross-origin submission
+// Submission
 //
-// IMPORTANT:
-// We do NOT try to read the POST response.
-//
-// Firefox/Apps Script can follow Google's ContentService
-// redirects through googleusercontent.com, and an invisible
-// iframe + postMessage response can surface a network error.
-//
-// Instead:
-// 1. POST the registration with fetch(mode:"no-cors")
-// 2. Give the request a random submission token
-// 3. Poll Apps Script using a JSONP GET for that token
-//
-// The JSONP response contains only the status/registration ID
-// for the unguessable token.
+// The Apps Script endpoint is intentionally public/anonymous.
+// We submit with a browser CORS-safe POST and do not attempt to
+// read the cross-origin response. This avoids the Firefox redirect /
+// JSONP MIME problem encountered earlier.
 // ============================================================
 
+function generateRegistrationId() {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+
+  let suffix = "";
+
+  for (const byte of bytes) {
+    suffix += alphabet[byte % alphabet.length];
+  }
+
+  return `SWIM-${suffix}`;
+}
+
 function generateSubmissionToken() {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
 
-  const bytes =
-    new Uint8Array(24);
-
-  crypto.getRandomValues(
-    bytes
-  );
-
-  return Array
-    .from(bytes)
-    .map(
-      byte =>
-        byte.toString(16)
-          .padStart(2, "0")
-    )
+  return Array.from(bytes)
+    .map(byte => byte.toString(16).padStart(2, "0"))
     .join("");
 }
 
 async function submitRegistration() {
-
-  if (
-    !validateStage1()
-  ) {
-
+  if (!validateStage1()) {
     goToStage(1);
-
     return;
   }
 
-  const events =
-    getSelectedEvents();
+  const events = getSelectedEvents();
 
   if (!events.length) {
-
     goToStage(2);
-
-    showToast(
-      "Select at least one event."
-    );
-
+    showToast("Select at least one event.");
     return;
   }
 
   if (!selectedPaymentFile) {
-
-    showToast(
-      "Please attach your payment screenshot."
-    );
-
+    showToast("Please attach your payment screenshot.");
     return;
   }
 
-  const dobProofFile =
-    dobProof.files[0];
-
-  const paymentFile =
-    selectedPaymentFile;
-
-  const submissionToken =
-    generateSubmissionToken();
+  const dobProofFile = dobProof.files[0];
+  const paymentFile = selectedPaymentFile;
+  const registrationId = generateRegistrationId();
+  const submissionToken = generateSubmissionToken();
 
   setSubmitting(true);
 
   try {
-
     uploadStatus.textContent =
       "Preparing your documents…";
 
-    const [
-      dobProofData,
-      paymentScreenshotData
-    ] = await Promise.all([
-
-      fileToDataUrl(
-        dobProofFile
-      ),
-
-      fileToDataUrl(
-        paymentFile
-      )
-    ]);
+    const [dobProofData, paymentScreenshotData] =
+      await Promise.all([
+        fileToDataUrl(dobProofFile),
+        fileToDataUrl(paymentFile)
+      ]);
 
     uploadStatus.textContent =
       "Submitting registration…";
 
-    const body =
-      new URLSearchParams();
+    const body = new URLSearchParams();
 
-    body.set(
-      "name",
-      $("name")
-        .value
-        .trim()
-    );
-
-    body.set(
-      "dob",
-      $("dob").value
-    );
-
-    body.set(
-      "gender",
-      $("gender").value
-    );
-
+    body.set("registrationId", registrationId);
+    body.set("submissionToken", submissionToken);
+    body.set("name", $("name").value.trim());
+    body.set("dob", $("dob").value);
+    body.set("gender", $("gender").value);
     body.set(
       "whatsapp",
-      $("whatsapp")
-        .value
-        .replace(/\D/g, "")
+      $("whatsapp").value.replace(/\D/g, "")
     );
-
-    body.set(
-      "events",
-      JSON.stringify(events)
-    );
-
+    body.set("events", JSON.stringify(events));
     body.set(
       "paymentReference",
-      $("paymentReference")
-        .value
-        .trim()
+      $("paymentReference").value.trim()
     );
-
-    body.set(
-      "dobProofBase64",
-      dobProofData
-    );
-
-    body.set(
-      "dobProofMimeType",
-      dobProofFile.type
-    );
-
+    body.set("dobProofBase64", dobProofData);
+    body.set("dobProofMimeType", dobProofFile.type);
     body.set(
       "paymentScreenshotBase64",
       paymentScreenshotData
     );
-
     body.set(
       "paymentScreenshotMimeType",
       paymentFile.type
     );
+    body.set("clientSource", "gitlab-pages");
 
-    body.set(
-      "clientSource",
-      "gitlab-pages"
-    );
+    // no-cors is intentional. The request is sent to Apps Script,
+    // but the browser is not asked to read its cross-origin response.
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body
+    });
 
-    body.set(
-      "submissionToken",
-      submissionToken
-    );
-
-    // We use no-cors deliberately.
-    // The POST is allowed to leave the page, but its response
-    // is intentionally opaque. We use JSONP polling below.
-    await fetch(
-      APPS_SCRIPT_URL,
-      {
-        method: "POST",
-        mode: "no-cors",
-        body
-      }
-    );
-
-    uploadStatus.textContent =
-      "Registration sent. Waiting for confirmation…";
-
-    const result =
-      await pollSubmissionStatus(
-        submissionToken
-      );
-
-    if (!result.success) {
-
-      throw new Error(
-        result.message ||
-        "Registration could not be completed."
-      );
-    }
-
+    // The backend uses the same client-generated registration ID,
+    // so the participant can be shown the exact reference without
+    // requiring a cross-origin response body.
     showSuccess(
-      result.registrationId,
+      registrationId,
       events,
-      result.totalFee ??
-        calculateTotal()
+      calculateTotal()
     );
 
   } catch (error) {
-
     console.error(
       "Swimming registration:",
       error
@@ -933,167 +839,11 @@ async function submitRegistration() {
 
     showSubmissionError(
       error.message ||
-      "Something went wrong. Please try again."
+      "Could not send the registration. Please try again."
     );
-
   } finally {
-
     setSubmitting(false);
   }
-}
-
-// ============================================================
-// JSONP status polling
-// ============================================================
-
-function pollSubmissionStatus(
-  token
-) {
-
-  return new Promise(
-    (resolve, reject) => {
-
-      const callbackName =
-        `__swimStatus_${Date.now()}_${Math.floor(
-          Math.random() * 100000
-        )}`;
-
-      let attempts = 0;
-
-      const maxAttempts =
-        90;
-
-      let script = null;
-
-      const timeout =
-        setInterval(
-          () => {
-
-            attempts += 1;
-
-            if (
-              attempts >
-              maxAttempts
-            ) {
-
-              cleanup();
-
-              reject(
-                new Error(
-                  "The registration server did not confirm the submission within 90 seconds. Please check the Nashik Swims sheet before trying again."
-                )
-              );
-
-              return;
-            }
-
-            requestStatus();
-
-          },
-          1000
-        );
-
-      window[callbackName] =
-        result => {
-
-          if (
-            !result ||
-            !result.status
-          ) {
-            return;
-          }
-
-          if (
-            result.status ===
-            "pending"
-          ) {
-            return;
-          }
-
-          cleanup();
-
-          if (
-            result.status ===
-            "success"
-          ) {
-
-            resolve({
-              success: true,
-              registrationId:
-                result.registrationId,
-              totalFee:
-                result.totalFee
-            });
-
-          } else {
-
-            resolve({
-              success: false,
-              message:
-                result.message ||
-                "Registration failed."
-            });
-          }
-        };
-
-      function requestStatus() {
-
-        script =
-          document.createElement(
-            "script"
-          );
-
-        script.src =
-          APPS_SCRIPT_URL +
-          "?callback=" +
-          encodeURIComponent(
-            callbackName
-          ) +
-          "&token=" +
-          encodeURIComponent(
-            token
-          ) +
-          "&_=" +
-          Date.now();
-
-        script.async = true;
-
-        script.onerror =
-          () => {
-            // A transient JSONP load error is ignored.
-            // The next poll will try again.
-          };
-
-        document.body.appendChild(
-          script
-        );
-      }
-
-      function cleanup() {
-
-        clearInterval(
-          timeout
-        );
-
-        try {
-          delete window[
-            callbackName
-          ];
-        } catch {}
-
-        if (
-          script &&
-          script.parentNode
-        ) {
-          script.parentNode
-            .removeChild(script);
-        }
-      }
-
-      // First request immediately.
-      requestStatus();
-    }
-  );
 }
 
 // ============================================================

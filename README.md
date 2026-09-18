@@ -1,39 +1,39 @@
-# Swimming Challenge — Connected v6
+# Swimming Challenge — Connected v7
 
-Mobile-first swimming challenge registration for GitLab Pages, connected to Google Apps Script, Google Sheets, and Google Drive.
+This version removes the Firefox-fragile JSONP status polling.
 
-## Why v5
+## Flow
 
-The previous hidden-iframe + `postMessage()` response approach could surface `NS_ERROR_DOM_NETWORK_ERR` in Firefox because Apps Script Content Service responses are redirected through Google's `googleusercontent.com` endpoint.
+GitLab Pages -> anonymous Apps Script POST -> Google Sheet + Google Drive.
 
-This version does not attempt to read the cross-origin POST response. The GitLab page submits with a simple `fetch()` using `mode: "no-cors"`, then polls a read-only Apps Script JSONP status endpoint using a random submission token.
+The browser sends the registration with a CORS-safe form-encoded POST using
+`mode: "no-cors"` and does not read the cross-origin response. A random,
+client-generated `SWIM-XXXXXXXX` registration ID is sent with the request and
+is therefore also shown immediately on the success screen.
 
-## Backend
+The Apps Script backend recalculates the fee at ₹200 per valid event, validates
+the four allowed events, saves DOB proof and payment screenshot to Drive, and
+appends the registration to the `Nashik Swims` tab.
 
-`apps-script/Code.gs` is the complete backend to paste into the Google Apps Script project.
+## Apps Script
 
-It writes to the private `Nashik Swims` sheet tab and saves DOB proof and payment screenshot files into the private Drive folder structure:
+Replace Code.gs with `apps-script/Code.gs`, save it, run `setupSwimmingChallenge`
+once if required, then update the existing Web App deployment to the new version.
+Keep:
 
-`Swimming Challenge 2026/Participant Documents`
+- Execute as: Me
+- Who has access: Anyone / anonymous
 
-The server recalculates the fee at ₹200 per valid event and generates `SWIM-0001`, `SWIM-0002`, etc.
+The `/exec` URL configured in `app.js` is the current user-provided deployment.
 
-## Deploy/update
+## GitLab Pages
 
-After pasting `apps-script/Code.gs` into Apps Script:
+Publish:
 
-1. Save.
-2. Run `setupSwimmingChallenge` once if the Sheet/Drive setup needs creating/updating.
-3. Deploy -> Manage deployments.
-4. Edit the existing Web app deployment and create a new version.
-5. Execute as: Me.
-6. Who has access: Anyone.
-7. Deploy/update.
+- index.html
+- styles.css
+- app.js
+- .gitlab-ci.yml
+- assets/payment-qr.png
 
-The existing `/exec` URL can remain the same when the deployment is updated.
-
-Then publish the root frontend files to GitLab Pages.
-
-## Privacy
-
-Keep the Google Sheet and Drive folders restricted/private. The GitLab site does not directly access either one.
+Keep the Google Sheet and Drive folder Restricted/private.
